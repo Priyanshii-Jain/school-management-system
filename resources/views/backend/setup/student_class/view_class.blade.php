@@ -13,8 +13,8 @@
 
 			 <div class="box">
 				<div class="box-header with-border">
-				  <h3 class="box-title">User List</h3>
-                  <a href="{{ route('users.add') }}" style="float: right;" class=" btn btn-rounded btn-success mb-5">Add User</a>
+				  <h3 class="box-title">Student Class List</h3>
+                  <a href="{{ route('student.class.add') }}" style="float: right;" class=" btn btn-rounded btn-success mb-5">Add Student Class</a>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
@@ -23,24 +23,18 @@
 						<thead>
 							<tr>
 								<th width="5%">SL</th>
-								<th>Role</th>
 								<th>Name</th>
-								<th>Email</th>
-								<th>Code</th>
 								<th width="25%">Action</th>
 							</tr>
 						</thead>
 						<tbody>
-                            @foreach($alldata as $key => $user)
+                            @foreach($alldata as $key => $student)
 							<tr>
 								<td>{{ $key+1 }}</td>
-								<td>{{ $user->role }}</td>
-								<td>{{ $user->name }}</td>
-								<td>{{ $user->email }}</td>
-								<th>{{ $user->code }}</th>
+								<td>{{ $student->name }}</td>
 								<td>
-                                    <a href="{{ route('users.edit',$user->id) }}" class="btn btn-info">Edit</a>
-                                    <a href="{{ route('users.delete',$user->id) }}" class="btn btn-danger" id="delete">Delete</a>
+                                    <a href="{{ route('edit.student.class',$student->id) }}" class="btn btn-info">Edit</a>
+                                    <a href="{{ route('delete.student.class',$student->id) }}" class="btn btn-danger" id="delete">Delete</a>
                                 </td>
 							</tr>
                             @endforeach
