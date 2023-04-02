@@ -73,33 +73,29 @@ $finalfee = (float)$originalfee-(float)$discounttablefee;
     <td><b>Student Name</b></td>
     <td>{{ $details['student']['name'] }}</td>
   </tr>
+  
   <tr>
     <td>4</td>
-    <td><b>Father's Name</b></td>
-    <td>{{ $details['student']['father_name'] }}</td>
-  </tr>
-  <tr>
-    <td>5</td>
     <td><b>Session</b></td>
     <td>{{ $details['student_year']['name'] }}</td>
   </tr>
   <tr>
-    <td>6</td>
+    <td>5</td>
     <td><b>Class</b></td>
     <td>{{ $details['class']['name'] }}</td>
   </tr>
   <tr>
-    <td>7</td>
+    <td>6</td>
     <td><b>Exam Fee</b></td>
     <td>${{ $originalfee }}</td>
   </tr>
   <tr>
-    <td>8</td>
+    <td>7</td>
     <td><b>Discount Fee</b></td>
     <td>{{ $discount }}%</td>
   </tr>
   <tr>
-    <td>9</td>
+    <td>8</td>
     <td><b>Fee for this Student of {{ $exam_type }}</b></td>
     <td>${{ $finalfee }}</td>
   </tr>
@@ -132,33 +128,29 @@ $finalfee = (float)$originalfee-(float)$discounttablefee;
     <td><b>Student Name</b></td>
     <td>{{ $details['student']['name'] }}</td>
   </tr>
+  
   <tr>
     <td>4</td>
-    <td><b>Father's Name</b></td>
-    <td>{{ $details['student']['father_name'] }}</td>
-  </tr>
-  <tr>
-    <td>5</td>
     <td><b>Session</b></td>
     <td>{{ $details['student_year']['name'] }}</td>
   </tr>
   <tr>
-    <td>6</td>
+    <td>5</td>
     <td><b>Class</b></td>
     <td>{{ $details['class']['name'] }}</td>
   </tr>
   <tr>
-    <td>7</td>
+    <td>6</td>
     <td><b>Exam Fee</b></td>
     <td>${{ $originalfee }}</td>
   </tr>
   <tr>
-    <td>8</td>
+    <td>7</td>
     <td><b>Discount Fee</b></td>
     <td>{{ $discount }}%</td>
   </tr>
   <tr>
-    <td>9</td>
+    <td>8</td>
     <td><b>Fee for this Student of {{ $exam_type }}</b></td>
     <td>${{ $finalfee }}</td>
   </tr>

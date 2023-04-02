@@ -14,11 +14,32 @@ use App\Http\Controllers\Backend\Setup\ExamTypeController;
 use App\Http\Controllers\Backend\Setup\SchoolSubjectController;
 use App\Http\Controllers\Backend\Setup\AssignSubjectController;
 use App\Http\Controllers\Backend\Setup\DesignationController;
+
 use App\Http\Controllers\Backend\Student\StudentRegistrationController;
 use App\Http\Controllers\Backend\Student\StudentRollController;
 use App\Http\Controllers\Backend\Student\RegistrationFeeController;
 use App\Http\Controllers\Backend\Student\MonthlyFeeController;
 use App\Http\Controllers\Backend\Student\ExamFeeController;
+
+use App\Http\Controllers\Backend\Employee\EmployeeRegistrationController;
+use App\Http\Controllers\Backend\Employee\EmployeeSalaryController;
+use App\Http\Controllers\Backend\Employee\EmployeeLeaveController;
+use App\Http\Controllers\Backend\Employee\EmployeeAttendanceController;
+use App\Http\Controllers\Backend\Employee\MonthlySalaryController;
+
+use App\Http\Controllers\Backend\Marks\MarksController;
+use App\Http\Controllers\Backend\Marks\GradeController;
+
+use App\Http\Controllers\Backend\DefaultController;
+
+use App\Http\Controllers\Backend\Account\StudentFeeController;
+use App\Http\Controllers\Backend\Account\AccountSalaryController;
+use App\Http\Controllers\Backend\Account\OtherCostController;
+
+use App\Http\Controllers\Backend\Report\ProfitController;
+use App\Http\Controllers\Backend\Report\MarksheetController;
+use App\Http\Controllers\Backend\Report\AttendanceReportController;
+use App\Http\Controllers\Backend\Report\ResultReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +56,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::group(['middleware' => 'prevent-back-history'],function(){
+    
+ 
+
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.index');
@@ -43,6 +68,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
 Route::get('/admin/logout', [AdminController::class, 'Logout'])->name('admin.logout');
 
+Route::group(['middleware' => 'auth'],function(){
 // User Management All routes
 
 Route::prefix('users')->group(function(){
@@ -184,4 +210,121 @@ Route::prefix('students')->group(function(){
     Route::get('/exam/fee/classwise/data', [ExamFeeController::class, 'ExamFeeClasswiseData'])->name('student.exam.fee.classwise.get');
     Route::get('/exam/fee/payslip', [ExamFeeController::class, 'ExamFeePaySlip'])->name('student.exam.fee.payslip');
 });
+
+// Employee Management Routes
+
+Route::prefix('employees')->group(function(){
+
+    // Employee Registration all routes
+    Route::get('/registration/view', [EmployeeRegistrationController::class, 'ViewEmployeeRegistration'])->name('employee.registration.view');
+    Route::get('/registration/add', [EmployeeRegistrationController::class, 'AddEmployeeRegistration'])->name('employee.registration.add');
+    Route::post('/registration/store', [EmployeeRegistrationController::class, 'StoreEmployeeRegistration'])->name('employee.registration.store');
+    Route::get('/registration/edit/{id}', [EmployeeRegistrationController::class, 'EditEmployeeRegistration'])->name('employee.registration.edit');
+    Route::post('/registration/update/{id}', [EmployeeRegistrationController::class, 'UpdateEmployeeRegistration'])->name('employee.registration.update');
+    Route::get('/registration/detail/{id}', [EmployeeRegistrationController::class, 'DetailsEmployeeRegistration'])->name('employee.registration.details');
+
+    // Employee Salary all routes
+    Route::get('/salary/view', [EmployeeSalaryController::class, 'ViewEmployeeSalary'])->name('employee.salary.view');
+    Route::get('/salary/increment/{id}', [EmployeeSalaryController::class, 'EmployeeSalaryIncrement'])->name('employee.salary.increment');
+    Route::post('/salary/increment/store/{id}', [EmployeeSalaryController::class, 'EmployeeSalaryIncrementStore'])->name('update.increment.store');
+    Route::get('/salary/details/{id}', [EmployeeSalaryController::class, 'EmployeeSalaryDetails'])->name('employee.salary.details');
+
+    // Employee Leave all routes
+    Route::get('/leave/view', [EmployeeLeaveController::class, 'ViewEmployeeLeave'])->name('employee.leave.view');
+    Route::get('/leave/add', [EmployeeLeaveController::class, 'AddEmployeeLeave'])->name('employee.leave.add');
+    Route::post('/leave/store', [EmployeeLeaveController::class, 'StoreEmployeeLeave'])->name('employee.leave.store');
+    Route::get('/leave/edit/{id}', [EmployeeLeaveController::class, 'EditEmployeeLeave'])->name('employee.leave.edit');
+    Route::post('/leave/update/{id}', [EmployeeLeaveController::class, 'UpdateEmployeeLeave'])->name('employee.leave.update');
+    Route::get('/leave/delete/{id}', [EmployeeLeaveController::class, 'DeleteEmployeeLeave'])->name('employee.leave.delete');
+
+    // Employee Attendance all routes
+    Route::get('/attendance/view', [EmployeeAttendanceController::class, 'ViewEmployeeAttendance'])->name('employee.attendance.view');
+    Route::get('/attendance/add', [EmployeeAttendanceController::class, 'AddEmployeeAttendance'])->name('employee.attendance.add');
+    Route::post('/attendance/store', [EmployeeAttendanceController::class, 'StoreEmployeeAttendance'])->name('employee.attendance.store');
+    Route::get('/attendance/edit/{date}', [EmployeeAttendanceController::class, 'EditEmployeeAttendance'])->name('employee.attendance.edit');
+    Route::get('/attendance/details/{date}', [EmployeeAttendanceController::class, 'EmployeeAttendanceDetails'])->name('employee.attendance.details');
+
+    // Employee Monthly Salary all routes
+    Route::get('/monthly/salary/view', [MonthlySalaryController::class, 'ViewEmployeeMonthlySalary'])->name('employee.monthly.salary.view');
+    Route::get('/monthly/salary/get', [MonthlySalaryController::class, 'GetEmployeeMonthlySalary'])->name('employee.monthly.salary.get');
+    Route::get('/monthly/salary/payslip/{employee_id}', [MonthlySalaryController::class, 'EmployeeMonthlySalaryPayslip'])->name('employee.monthly.salary.payslip');
+    
+});
+
+// Marks Management Routes
+
+Route::prefix('marks')->group(function(){
+
+    // Marks Entry all routes
+    Route::get('/entry/add', [MarksController::class, 'MarksAdd'])->name('marks.entry.add');
+    Route::post('/entry/store', [MarksController::class, 'MarksStore'])->name('marks.entry.store');
+    Route::get('/entry/edit', [MarksController::class, 'MarksEdit'])->name('marks.entry.edit');
+    Route::get('/entry/getstudents/edit', [MarksController::class, 'MarksEditGetStudents'])->name('student.edit.getstudents');
+    Route::post('/entry/update', [MarksController::class, 'MarksUpdate'])->name('marks.entry.update');
+
+    // Marks Entry Grade all routes
+    Route::get('/grade/view', [GradeController::class, 'MarksGradeView'])->name('marks.entry.grade');
+    Route::get('/grade/add', [GradeController::class, 'MarksGradeAdd'])->name('marks.grade.add');
+    Route::post('/grade/store', [GradeController::class, 'MarksGradeStore'])->name('grade.marks.store');
+    Route::get('/grade/edit/{id}', [GradeController::class, 'MarksGradeEdit'])->name('grade.marks.edit');
+    Route::post('/grade/update/{id}', [GradeController::class, 'MarksGradeUpdate'])->name('grade.marks.update');
+});
+
+// Accounts Management Routes
+
+Route::prefix('accounts')->group(function(){
+
+    // Student Fee all routes
+    Route::get('/student/fee/view', [StudentFeeController::class, 'ViewStudentFee'])->name('student.fee.view');
+    Route::get('/student/fee/add', [StudentFeeController::class, 'AddStudentFee'])->name('student.fee.add');
+    Route::get('/student/fee/getstudent', [StudentFeeController::class, 'AccountGetStudentFee'])->name('account.fee.getstudent');
+    Route::post('/student/fee/store', [StudentFeeController::class, 'StoreStudentFee'])->name('account.fee.store');
+
+    // Employee Salary all routes
+    Route::get('/employee/salary/view', [AccountSalaryController::class, 'ViewEmployeeSalary'])->name('account.salary.view');
+    Route::get('/employee/salary/add', [AccountSalaryController::class, 'AddEmployeeSalary'])->name('account.salary.add');
+    Route::get('/employee/salary/getemployee', [AccountSalaryController::class, 'AccountGetEmployeeSalary'])->name('account.salary.getemployee');
+    Route::post('/employee/salary/store', [AccountSalaryController::class, 'StoreEmployeeSalary'])->name('account.salary.store');
+
+    // Other Cost all routes
+    Route::get('/other/cost/view', [OtherCostController::class, 'ViewOtherCost'])->name('other.cost.view');
+    Route::get('/other/cost/add', [OtherCostController::class, 'AddOtherCost'])->name('other.cost.add');
+    Route::post('/other/cost/store', [OtherCostController::class, 'StoreOtherCost'])->name('other.cost.store');
+    Route::get('/other/cost/edit/{id}', [OtherCostController::class, 'EditOtherCost'])->name('other.cost.edit');
+    Route::post('/other/cost/update/{id}', [OtherCostController::class, 'UpdateOtherCost'])->name('other.cost.update');
+});
+
+Route::get('marks/getsubject', [DefaultController::class, 'GetSubject'])->name('marks.getsubject');
+Route::get('student/marks/getstudents', [DefaultController::class, 'GetStudents'])->name('student.marks.getstudents');
+
+// Report Management Routes
+
+Route::prefix('reports')->group(function(){
+
+    // Monthly-Yearly Profit all routes
+    Route::get('/monthly/profit/view', [ProfitController::class, 'ViewMonthlyProfit'])->name('monthly.profit.view');
+    Route::get('/monthly/profit/datewise', [ProfitController::class, 'DatewiseMonthlyProfit'])->name('report.profit.datewise.get');
+    Route::get('/monthly/profit/pdf', [ProfitController::class, 'MonthlyProfitReportPDF'])->name('report.profit.pdf');
+
+    // Generate Marksheet all routes
+    Route::get('/marksheet/generate/view', [MarksheetController::class, 'ViewMarksheetGenerate'])->name('marksheet.generate.view');
+    Route::get('/marksheet/generate/getreport', [MarksheetController::class, 'GetMarksheetGenerate'])->name('report.marksheet.get');
+
+    // Attendance Report all routes
+    Route::get('/attendance/report/view', [AttendanceReportController::class, 'ViewAttendanceReport'])->name('attendance.report.view');
+    Route::get('/attendance/report/get', [AttendanceReportController::class, 'GetAttendanceReport'])->name('report.attendance.get');
+
+    // Student Result all routes
+    Route::get('/student/result/view', [ResultReportController::class, 'ViewStudentResult'])->name('student.result.view');
+    Route::get('/student/result/get', [ResultReportController::class, 'GetStudentResult'])->name('report.student.result.get');
+
+    // Id card Generate all routes
+    Route::get('/student/idcard/view', [ResultReportController::class, 'ViewStudentIdCard'])->name('student.idcard.view');
+    Route::get('/student/idcard/get', [ResultReportController::class, 'GetStudentIdCard'])->name('report.student.idcard.get');
+});
+
+
+});
+
+}); //End Middelware All Route
     
